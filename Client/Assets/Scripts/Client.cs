@@ -43,7 +43,7 @@ public class Client : MonoBehaviour
         gameStarted = false;
         DontDestroyOnLoad(gameObject);
         //SERVER_IP = IPManager.GetIP(ADDRESSFAM.IPv4);
-        SERVER_IP = "172.19.235.241";
+        SERVER_IP = "192.168.1.112";
         Init();
         localPlayers = new HashSet<string>();
         startGameButton = GameObject.Find("StartGameButton").GetComponent<Button>();
