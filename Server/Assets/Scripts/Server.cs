@@ -70,7 +70,7 @@ public class Server : MonoBehaviour
 
         Debug.Log(string.Format("Opening connection on port {0} and webport {1}", PORT, WEB_PORT));
 
-        Debug.Log(string.Format("My current IP address is: {0}", IPManager.GetIP(ADDRESSFAM.IPv4)));
+        Debug.Log(string.Format("My current IP address is: {0}", IPManager.GetIP(ADDRESSFAM.IPv6)));
         isStarted = true;
     }
     public void Shutdown()
