@@ -1,6 +1,6 @@
 Win64
 PlayerPath?
-C:/Users/Anthony/Documents/WerewolfGame/TestNetwork2/ClientTut.exe
+C:/Users/Anthony/Documents/WerewolfGame/TestNetwork1/ClientTut.exe
 SceneListBegin?
 Assets/Scenes/Lobby.unity
 SceneListEnd?
