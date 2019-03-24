@@ -13,12 +13,15 @@ public class Server : MonoBehaviour
     private byte error;
 
     private string[] playerList;
+    private string[] middleCards;
 
     private int hostId;
     private int webHostId;
     private int numCurrPlayers;
 
+    //Server started
     private bool isStarted;
+    //Game started
     private bool gameStarted;
 
     private const int MAX_USER = 10;
@@ -193,6 +196,7 @@ public class Server : MonoBehaviour
         isStarted = true;
         gameBoard Game = new gameBoard(playerList);
         Game.shuffle();
+        string[] nothing = Game.giveOutCards();
     }
 
     #endregion

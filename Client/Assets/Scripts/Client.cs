@@ -23,11 +23,13 @@ public class Client : MonoBehaviour
 
     private Button startGameButton;
 
+    private string playerCard;
+
     private const int MAX_USER = 10;
     private const int PORT = 26000;
     private const int WEB_PORT = 26001;
     private const int BYTE_SIZE = 1024;
-    private const string SERVER_IP = "127.0.0.1";
+    private const string SERVER_IP = "24.191.198.127";
 
     private HashSet<string> localPlayers;
 

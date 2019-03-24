@@ -12,10 +12,4 @@ public class LobbyScene : MonoBehaviour
 
         Client.Instance.SendNameCreate(username);
     }
-    /*
-    public void OnClickStartGame()
-    {
-        Client.Instance.StartGame();
-    }
-    */
 }
