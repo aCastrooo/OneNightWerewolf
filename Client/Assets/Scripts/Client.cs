@@ -43,7 +43,7 @@ public class Client : MonoBehaviour
         gameStarted = false;
         DontDestroyOnLoad(gameObject);
         //SERVER_IP = IPManager.GetIP(ADDRESSFAM.IPv4);
-        SERVER_IP = "192.168.1.112";
+        SERVER_IP = "172.19.235.241";
         Init();
         localPlayers = new HashSet<string>();
         startGameButton = GameObject.Find("StartGameButton").GetComponent<Button>();
@@ -81,7 +81,7 @@ public class Client : MonoBehaviour
         Debug.Log("Connecting from client.");
 #endif
 
-        Debug.Log(string.Format("Attempting to connect to server: {0}", SERVER_IP));
+        DebugConsole.Log(string.Format("Attempting to connect to server: {0}", SERVER_IP));
         isStarted = true;
     }
     public void Shutdown()
@@ -115,10 +115,10 @@ public class Client : MonoBehaviour
             case NetworkEventType.Nothing:
                 break;
             case NetworkEventType.ConnectEvent:
-                Debug.Log(string.Format("Server connection established", connectionId));
+                DebugConsole.Log(string.Format("Server connection established", connectionId));
                 break;
             case NetworkEventType.DisconnectEvent:
-                Debug.Log(string.Format("Disconnected from the server", connectionId));
+                DebugConsole.Log(string.Format("Disconnected from the server", connectionId));
                 break;
             case NetworkEventType.DataEvent:
                 BinaryFormatter formatter = new BinaryFormatter();

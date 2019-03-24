@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\Client.cs" />
+    <Compile Include="Assets\Scripts\DebugConsole.cs" />
     <Compile Include="Assets\Scripts\LobbyScene.cs" />
     <Compile Include="Assets\Scripts\Shared\gameBoard.cs" />
     <Compile Include="Assets\Scripts\Shared\Net_CreateAcc.cs" />
