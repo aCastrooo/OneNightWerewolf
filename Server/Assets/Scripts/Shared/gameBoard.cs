@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class gameBoard : MonoBehaviour
 {
-
-    private string[] cardDeck;
     private string[] players;
+    private string[] cardDeck;
+
+    private List<string> deck;
 
     public gameBoard(string[] players)
     {
@@ -27,6 +29,9 @@ public class gameBoard : MonoBehaviour
                                   "Insomniac",
                                   "Minion",
                                   "Doppelganger"};
+
+        deck = new List<string>();
+        deck.AddRange(cardDeck);
     }
 
     private void swap(int first, int second)
@@ -60,5 +65,17 @@ public class gameBoard : MonoBehaviour
             Debug.Log(cards);
         }
 
+    }
+
+    public string[] giveOutCards()
+    {
+        string[] midCards = new string[3];
+        for (int i=0; i<3; i++)
+        {
+            midCards[i] = cardDeck[(cardDeck.Length-1) - i];
+
+        }
+
+        return null;
     }
 }
