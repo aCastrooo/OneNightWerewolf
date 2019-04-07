@@ -28,8 +28,8 @@ public class Server : MonoBehaviour
     private bool gameStarted;
 
     private const int MAX_USER = 10;
-    private const int PORT = 26000;
-    private const int WEB_PORT = 26001;
+    private const int PORT = 31415;
+    private const int WEB_PORT = 31414;
     private const int BYTE_SIZE = 1024;
 
     #region Monobehaviour
@@ -70,7 +70,7 @@ public class Server : MonoBehaviour
 
         Debug.Log(string.Format("Opening connection on port {0} and webport {1}", PORT, WEB_PORT));
 
-        Debug.Log(string.Format("My current IP address is: {0}", IPManager.GetIP(ADDRESSFAM.IPv6)));
+        Debug.Log(string.Format("My current IP address is: {0}", IPManager.GetIP(ADDRESSFAM.IPv4)));
         isStarted = true;
     }
     public void Shutdown()

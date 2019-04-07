@@ -29,8 +29,8 @@ public class Client : MonoBehaviour
     private string playerCard;
 
     private const int MAX_USER = 10;
-    private const int PORT = 26000;
-    private const int WEB_PORT = 26001;
+    private const int PORT = 31415;
+    private const int WEB_PORT = 31414;
     private const int BYTE_SIZE = 1024;
     private string SERVER_IP;
 
@@ -43,7 +43,7 @@ public class Client : MonoBehaviour
         gameStarted = false;
         DontDestroyOnLoad(gameObject);
         //SERVER_IP = IPManager.GetIP(ADDRESSFAM.IPv4);
-        SERVER_IP = "fe80::c1f3:6e87:6253:73d5";
+        SERVER_IP = "192.168.1.112";
         Init();
         localPlayers = new HashSet<string>();
         startGameButton = GameObject.Find("StartGameButton").GetComponent<Button>();
@@ -78,10 +78,10 @@ public class Client : MonoBehaviour
         Debug.Log("Connecting from web.");
 #else
         connectionId = NetworkTransport.Connect(hostId, SERVER_IP, PORT, 0, out error);
-        Debug.Log("Connecting from client.");
+        Debug.Log("Connecting from a client.");
 #endif
 
-        DebugConsole.Log(string.Format("Attempting to connect to server: {0}", SERVER_IP));
+        Debug.Log(string.Format("Attempting to connect to server: {0}", SERVER_IP));
         isStarted = true;
     }
     public void Shutdown()
@@ -115,10 +115,10 @@ public class Client : MonoBehaviour
             case NetworkEventType.Nothing:
                 break;
             case NetworkEventType.ConnectEvent:
-                DebugConsole.Log(string.Format("Server connection established", connectionId));
+                Debug.Log(string.Format("Server connection established", connectionId));
                 break;
             case NetworkEventType.DisconnectEvent:
-                DebugConsole.Log(string.Format("Disconnected from the server", connectionId));
+                Debug.Log(string.Format("Disconnected from the server", connectionId));
                 break;
             case NetworkEventType.DataEvent:
                 BinaryFormatter formatter = new BinaryFormatter();
