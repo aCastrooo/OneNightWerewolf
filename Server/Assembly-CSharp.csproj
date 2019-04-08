@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Server.cs" />
     <Compile Include="Assets\Scripts\Shared\gameBoard.cs" />
+    <Compile Include="Assets\Scripts\Shared\Net_Card.cs" />
     <Compile Include="Assets\Scripts\Shared\Net_CreateAcc.cs" />
     <Compile Include="Assets\Scripts\Shared\Net_LoginRequest.cs" />
     <Compile Include="Assets\Scripts\Shared\Net_PlayerList.cs" />

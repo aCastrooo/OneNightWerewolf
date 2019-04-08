@@ -140,7 +140,7 @@ public class Server : MonoBehaviour
                 createAccount(conId,  recHostId, (Net_CreateAcc)msg);
                 break;
             case NetOP.StartGame:
-                StartGameInstance();
+                StartGameInstance(conId, recHostId);
                 break;
             default:
                 Debug.Log("Nothing to see");
@@ -193,15 +193,27 @@ public class Server : MonoBehaviour
     #endregion
 
 
-
-
     #region GamePlay
-    private void StartGameInstance()
+    private void StartGameInstance(int conId, int recHostId)
     {
         isStarted = true;
         gameBoard Game = new gameBoard(playerList);
         Game.shuffle();
-        string[] nothing = Game.giveOutCards();
+        string[] midCards = Game.dealMiddleCards();
+
+        Debug.Log("Current middle cards:");
+        foreach(string card in midCards)
+        {
+            Debug.Log(card);
+        }
+        Debug.Log("Dealing player cards");
+
+        for (int i=1; i <= numCurrPlayers; i++)
+        {
+            Net_Card newMsg = new Net_Card();
+            newMsg.card = Game.dealPlayerCard();
+            SendClient(recHostId, i, (Net_Card)newMsg);
+        }
     }
 
     #endregion
@@ -254,7 +266,6 @@ public class IPManager
         return output;
     }
 }
-
 public enum ADDRESSFAM
 {
     IPv4, IPv6

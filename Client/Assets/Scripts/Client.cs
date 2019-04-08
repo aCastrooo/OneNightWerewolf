@@ -9,6 +9,7 @@ using System.Net.Sockets;
 using UnityEngine.Networking;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 public class Client : MonoBehaviour
 {
@@ -124,9 +125,7 @@ public class Client : MonoBehaviour
                 BinaryFormatter formatter = new BinaryFormatter();
                 MemoryStream ms = new MemoryStream(recBuffer);
                 NetMsg msg = (NetMsg)formatter.Deserialize(ms);
-
                 OnData(connectionId, channelId, recHostId, msg);
-
                 break;
             default:
                 Debug.Log("???");
@@ -166,6 +165,7 @@ public class Client : MonoBehaviour
         Debug.Log("Starting game!");
 
         SendServer(sg);
+        SceneManager.LoadScene("Game");
     }
     #endregion
 
@@ -176,6 +176,9 @@ public class Client : MonoBehaviour
         {
             case NetOP.PlayerList:
                 UpdatePlayerList(msg);
+                break;
+            case NetOP.SendCard:
+                DisplayCard(msg);
                 break;
             default:
                 Debug.Log("Nothing to see");
@@ -211,6 +214,13 @@ public class Client : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void DisplayCard(NetMsg msg)
+    {
+        Net_Card cardMsg = (Net_Card)msg;
+        Debug.Log(string.Format("Got card!"));
+        Debug.Log(string.Format("My card is {0}", cardMsg.card));
     }
     #endregion
 }
@@ -262,7 +272,6 @@ public class IPManager
         return output;
     }
 }
-
 public enum ADDRESSFAM
 {
     IPv4, IPv6

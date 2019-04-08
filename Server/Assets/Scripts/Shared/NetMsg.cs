@@ -5,6 +5,7 @@
     public const int LoginRequest = 2;
     public const int PlayerList = 3;
     public const int StartGame = 4;
+    public const int SendCard = 5;
 }
 
 [System.Serializable]

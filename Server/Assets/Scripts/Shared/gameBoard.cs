@@ -8,7 +8,7 @@ public class gameBoard : MonoBehaviour
     private string[] players;
     private string[] cardDeck;
 
-    private List<string> deck;
+    private LinkedList<string> deck;
 
     public gameBoard(string[] players)
     {
@@ -29,9 +29,6 @@ public class gameBoard : MonoBehaviour
                                   "Insomniac",
                                   "Minion",
                                   "Doppelganger"};
-
-        deck = new List<string>();
-        deck.AddRange(cardDeck);
     }
 
     private void swap(int first, int second)
@@ -41,16 +38,8 @@ public class gameBoard : MonoBehaviour
         cardDeck[second] = temp;
     }
 
-
     public void shuffle()
     {
-        Debug.Log("Before shuffle");
-        foreach (string cards in cardDeck)
-        {
-            Debug.Log(cards);
-        }
-
-
         System.Random rndm = new System.Random();
         for (int i=0; i<cardDeck.Length-2; i++)
         {
@@ -58,24 +47,32 @@ public class gameBoard : MonoBehaviour
             swap(i, j);
         }
 
+        deck = new LinkedList<string>();
 
-        Debug.Log("\n\nAfter shuffle");
-        foreach (string cards in cardDeck)
-        {
-            Debug.Log(cards);
-        }
-
+        foreach (string card in cardDeck)
+            deck.AddLast(card);
     }
 
-    public string[] giveOutCards()
+    public string[] dealMiddleCards()
     {
+        Debug.Log(deck.Count);
         string[] midCards = new string[3];
         for (int i=0; i<3; i++)
         {
-            midCards[i] = cardDeck[(cardDeck.Length-1) - i];
-
+            midCards[i] = deck.First.Value;
+            deck.RemoveFirst();
         }
-
-        return null;
+        Debug.Log(deck.Count);
+        return midCards;
     }
+
+    public string dealPlayerCard()
+    {
+        string card = deck.First.Value;
+        deck.RemoveFirst();
+        Debug.Log(deck.Count);
+        return card;
+    }
+
+
 }
