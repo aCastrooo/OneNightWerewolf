@@ -6,6 +6,7 @@
     public const int PlayerList = 3;
     public const int StartGame = 4;
     public const int SendCard = 5;
+    public const int RemovePlayer = 6;
 }
 
 [System.Serializable]

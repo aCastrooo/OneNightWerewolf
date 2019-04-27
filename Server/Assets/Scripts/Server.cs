@@ -32,6 +32,8 @@ public class Server : MonoBehaviour
     private const int WEB_PORT = 31414;
     private const int BYTE_SIZE = 1024;
 
+    private Dictionary<int, int> playerConRecIds;
+
     #region Monobehaviour
     private void Start()
     {
@@ -47,6 +49,7 @@ public class Server : MonoBehaviour
         Init();
 
         numCurrPlayers = 0;
+        playerConRecIds = new Dictionary<int, int>();
     }
 
     private void Update()
@@ -109,12 +112,20 @@ public class Server : MonoBehaviour
                 SendUpdatedPlayerList(connectionId, recHostId);
                 break;
             case NetworkEventType.DisconnectEvent:
+                //NetMsg rmMsg = recieveMsg(recBuffer);
                 Debug.Log(string.Format("User {0} has disconnected.", connectionId));
+                numCurrPlayers -= 1;
+                Debug.Log("here");
+                removePlayer(connectionId, recHostId);
+                Debug.Log("here");
+                Debug.Log(string.Format("Num players: {0}", numCurrPlayers));
+                //OnData(connectionId, channelId, recHostId, rmMsg);
                 break;
             case NetworkEventType.DataEvent:
                 NetMsg msg = recieveMsg(recBuffer);
                 Debug.Log(msg);
                 Debug.Log(string.Format("{0} {1} {2} {3}", connectionId, channelId, recHostId, msg.OP));
+                //addToPlayerConRecList(connectionId, recHostId);
                 OnData(connectionId, channelId, recHostId, msg);
                 break;
             default:
@@ -125,6 +136,14 @@ public class Server : MonoBehaviour
     }
 
     #region OnData
+
+    private void addToPlayerConRecList(int connectionId, int recHostId)
+    {
+        if (playerConRecIds.ContainsKey(connectionId))
+            playerConRecIds.Add(connectionId, recHostId);
+    }
+
+
     private NetMsg recieveMsg(byte[] recBuffer)
     {
         BinaryFormatter formatter = new BinaryFormatter();
@@ -140,7 +159,12 @@ public class Server : MonoBehaviour
                 createAccount(conId,  recHostId, (Net_CreateAcc)msg);
                 break;
             case NetOP.StartGame:
+                SendStartGame(conId, recHostId);
                 StartGameInstance(conId, recHostId);
+                break;
+            case NetOP.RemovePlayer:
+                numCurrPlayers = -1;
+                removePlayer(conId, recHostId);
                 break;
             default:
                 Debug.Log("Nothing to see");
@@ -161,8 +185,35 @@ public class Server : MonoBehaviour
                 break;
             }
         }
+
+        Debug.Log("PLAYERS:");
+        foreach (string player in playerList)
+        {
+            Debug.Log(player);
+        }
+
         SendUpdatedPlayerList(conId, recHostId);
 
+    }
+
+    private void removePlayer(int connectionID, int recHostId)
+    {
+        int i = 1;
+        while (i < connectionID) {
+            Debug.Log(string.Format("{0}", playerList[i]));
+            i++;
+        }
+        i--;
+        string pRemove = playerList[i];
+        playerList[i] = "";
+
+        Debug.Log("PLAYERS:");
+        foreach (string player in playerList)
+        {
+            Debug.Log(player);
+        }
+
+        SendRemovePlayer(connectionID, recHostId, pRemove);
     }
     #endregion
 
@@ -184,10 +235,41 @@ public class Server : MonoBehaviour
 
     private void SendUpdatedPlayerList(int connectionId, int recHostId)
     {
-        for (int i = 1; i <= numCurrPlayers; i++) {
-            Net_PlayerList newMsg = new Net_PlayerList();
-            newMsg.playerList = playerList;
-            SendClient(recHostId, i, (Net_PlayerList)newMsg);
+        for (int i = 0; i < playerList.Length; i++)
+        {
+            if (!playerList[i].Equals(""))
+            {
+                Net_PlayerList newMsg = new Net_PlayerList();
+                newMsg.playerList = playerList;
+                SendClient(recHostId, i+1, (Net_PlayerList)newMsg);
+            }
+        }
+    }
+
+    private void SendRemovePlayer(int conId, int recHostId, string player)
+    {
+        Debug.Log("sending removed player");
+        for (int i = 0; i < playerList.Length; i++)
+        {
+            if (!playerList[i].Equals(""))
+            {
+                Net_RemovePlayer msg = new Net_RemovePlayer();
+                msg.playerToRemove = player;
+                SendClient(recHostId, i+1, (Net_RemovePlayer)msg);
+            }
+        }
+    }
+
+    private void SendStartGame(int connectionId, int recHostId)
+    {
+        for (int i = 0; i < playerList.Length; i++)
+        {
+            if (!playerList[i].Equals(""))
+            {
+                Net_StartGame msg = new Net_StartGame();
+                msg.gameStart = true;
+                SendClient(recHostId, i + 1, (Net_StartGame)msg);
+            }
         }
     }
     #endregion

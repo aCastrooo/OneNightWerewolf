@@ -22,12 +22,16 @@ public class Client : MonoBehaviour
     private int connectionId;
     private int hostId;
 
+    //For the server connection
     private bool isStarted;
+    //For the game instance
     private bool gameStarted;
+    private bool shuffleCards;
 
     private Button startGameButton;
 
     private string playerCard;
+    private string myUsername;
 
     private const int MAX_USER = 10;
     private const int PORT = 31415;
@@ -35,7 +39,7 @@ public class Client : MonoBehaviour
     private const int BYTE_SIZE = 1024;
     private string SERVER_IP;
 
-    private HashSet<string> localPlayers;
+    private List<string> localPlayers;
 
     #region Monobehaviour
     private void Start()
@@ -46,9 +50,8 @@ public class Client : MonoBehaviour
         //SERVER_IP = IPManager.GetIP(ADDRESSFAM.IPv4);
         SERVER_IP = "192.168.1.112";
         Init();
-        localPlayers = new HashSet<string>();
+        localPlayers = new List<string>();
         startGameButton = GameObject.Find("StartGameButton").GetComponent<Button>();
-
     }
 
     private void Update()
@@ -58,6 +61,13 @@ public class Client : MonoBehaviour
         {
             //startGameButton.interactable = false;
         }
+
+        if (shuffleCards)
+        {
+            //Move the player's card to them
+            //Vector3 initial = Vector3();
+        }
+
     }
     #endregion
 
@@ -126,6 +136,7 @@ public class Client : MonoBehaviour
                 MemoryStream ms = new MemoryStream(recBuffer);
                 NetMsg msg = (NetMsg)formatter.Deserialize(ms);
                 OnData(connectionId, channelId, recHostId, msg);
+                Debug.Log(msg.OP);
                 break;
             default:
                 Debug.Log("???");
@@ -151,13 +162,14 @@ public class Client : MonoBehaviour
     {
         Net_CreateAcc ca = new Net_CreateAcc();
         ca.Username = username;
+        myUsername = username;
 
         SendServer(ca);
         Button submitNameButt = GameObject.Find("SendNameButton").GetComponent<Button>();
         submitNameButt.interactable = false;
     }
 
-    public void StartGame()
+    public void SendStartGame()
     {
         Net_StartGame sg = new Net_StartGame();
         sg.gameStart = true;
@@ -165,20 +177,26 @@ public class Client : MonoBehaviour
         Debug.Log("Starting game!");
 
         SendServer(sg);
-        SceneManager.LoadScene("Game");
     }
     #endregion
 
     #region OnData
     private void OnData(int conId, int chanId, int recHostId, NetMsg msg)
     {
+        
         switch (msg.OP)
         {
             case NetOP.PlayerList:
-                UpdatePlayerList(msg);
+                addPlayer(msg);
+                break;
+            case NetOP.RemovePlayer:
+                removePlayer(msg);
                 break;
             case NetOP.SendCard:
-                DisplayCard(msg);
+                displayCard(msg);
+                break;
+            case NetOP.StartGame:
+                loadGameScene();
                 break;
             default:
                 Debug.Log("Nothing to see");
@@ -187,13 +205,56 @@ public class Client : MonoBehaviour
         }
     }
 
-    private void UpdatePlayerList(NetMsg msg)
+    private void removePlayer(NetMsg msg)
+    {
+        Net_RemovePlayer rm = (Net_RemovePlayer)msg;
+        string playerToRm = rm.playerToRemove;
+        GameObject currPlayers = GameObject.Find("CurrPlayers");
+
+        localPlayers.Remove(playerToRm);
+        Transform player = currPlayers.transform.Find(playerToRm);
+        player.parent = null;
+        Destroy(player.gameObject);
+    }
+
+    private void displayCard(NetMsg msg)
+    {
+        Net_Card cardMsg = (Net_Card)msg;
+        Debug.Log(string.Format("Got card!"));
+        Debug.Log(string.Format("My card is {0}", cardMsg.card));
+
+        GameObject currCard = null;
+        string card = cardMsg.card;
+
+        float t = 0.0f;
+        Vector3 target = new Vector3(-0.37f, 0.116f, 0.212f);
+
+        if (card.Equals("Villager") || card.Equals("Mason") || card.Equals("Werewolf"))
+        {
+            GameObject[] taggedCards = GameObject.FindGameObjectsWithTag(card);
+            currCard = taggedCards[0];
+        }
+        else
+        {
+            currCard = GameObject.Find(card);
+        }
+
+        currCard.transform.position = target;
+        //Vector3 currPos = currCard.transform.position;
+        //while (t < 1)
+        //{
+        //    t += Time.deltaTime / 3.0f;
+        //    currCard.transform.position = Vector3.Lerp(currPos, target, t);
+        //}
+        
+    }
+
+    private void addPlayer(NetMsg msg)
     {
         Net_PlayerList playerListMsg = (Net_PlayerList)msg;
         string[] playerList = playerListMsg.playerList;
         GameObject currPlayers = GameObject.Find("CurrPlayers");
 
-        Debug.Log("new player list incoming");
         foreach (string player in playerList)
         {
             if (!player.Equals(""))
@@ -205,6 +266,7 @@ public class Client : MonoBehaviour
                     localPlayers.Add(player);
 
                     GameObject newPlayerName = Instantiate(playerTextPrefab) as GameObject;
+                    newPlayerName.name = player;
                     newPlayerName.transform.SetParent(currPlayers.GetComponent<Transform>());
                     newPlayerName.GetComponent<TMP_Text>().text = player;
                     newPlayerName.transform.SetSiblingIndex(1);
@@ -216,11 +278,9 @@ public class Client : MonoBehaviour
         }
     }
 
-    private void DisplayCard(NetMsg msg)
+    private void loadGameScene()
     {
-        Net_Card cardMsg = (Net_Card)msg;
-        Debug.Log(string.Format("Got card!"));
-        Debug.Log(string.Format("My card is {0}", cardMsg.card));
+        SceneManager.LoadScene("Game");
     }
     #endregion
 }
