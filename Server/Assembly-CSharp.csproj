@@ -66,6 +66,7 @@
     <Compile Include="Assets\Scripts\Shared\Net_CreateAcc.cs" />
     <Compile Include="Assets\Scripts\Shared\Net_LoginRequest.cs" />
     <Compile Include="Assets\Scripts\Shared\Net_PlayerList.cs" />
+    <Compile Include="Assets\Scripts\Shared\Net_ReadyUp.cs" />
     <Compile Include="Assets\Scripts\Shared\Net_RemovePlayer.cs" />
     <Compile Include="Assets\Scripts\Shared\Net_StartGame.cs" />
     <Compile Include="Assets\Scripts\Shared\NetMsg.cs" />

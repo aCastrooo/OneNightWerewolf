@@ -7,6 +7,7 @@
     public const int StartGame = 4;
     public const int SendCard = 5;
     public const int RemovePlayer = 6;
+    public const int Ready = 7;
 }
 
 [System.Serializable]

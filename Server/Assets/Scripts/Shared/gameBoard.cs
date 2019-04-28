@@ -2,17 +2,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class gameBoard : MonoBehaviour
 {
     private string[] players;
     private string[] cardDeck;
 
+    private bool[] readyPlayers;
+
     private LinkedList<string> deck;
 
     public gameBoard(string[] players)
     {
         this.players = players;
+        readyPlayers = new bool[players.Length];
+
         cardDeck = new string[] { "Villager",
                                   "Villager",
                                   "Villager",
@@ -74,5 +79,25 @@ public class gameBoard : MonoBehaviour
         return card;
     }
 
+    public void readyUp()
+    {
+        for (int i=0; i<readyPlayers.Length; i++)
+        {
+            if (!readyPlayers[i])
+            {
+                readyPlayers[i] = true;
+                break;
+            }
+        }
+
+        int count = 0;
+        Debug.Log("NUM READY PLAYERS");
+        foreach (bool b in readyPlayers)
+        {
+            if (b)
+                count++;
+        }
+        Debug.Log(count);
+    }
 
 }
