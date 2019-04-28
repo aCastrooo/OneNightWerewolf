@@ -34,6 +34,8 @@ public class Server : MonoBehaviour
 
     private Dictionary<int, int> playerConRecIds;
 
+    public gameBoard Game;
+
     #region Monobehaviour
     private void Start()
     {
@@ -166,6 +168,9 @@ public class Server : MonoBehaviour
                 numCurrPlayers = -1;
                 removePlayer(conId, recHostId);
                 break;
+            case NetOP.Ready:
+                ready();
+                break;
             default:
                 Debug.Log("Nothing to see");
                 break;
@@ -279,7 +284,7 @@ public class Server : MonoBehaviour
     private void StartGameInstance(int conId, int recHostId)
     {
         isStarted = true;
-        gameBoard Game = new gameBoard(playerList);
+        Game = new gameBoard(playerList);
         Game.shuffle();
         string[] midCards = Game.dealMiddleCards();
 
@@ -296,6 +301,12 @@ public class Server : MonoBehaviour
             newMsg.card = Game.dealPlayerCard();
             SendClient(recHostId, i, (Net_Card)newMsg);
         }
+    }
+
+    private void ready()
+    {
+        Game.readyUp();
+        Debug.Log("ready");
     }
 
     #endregion
