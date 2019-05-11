@@ -9,7 +9,6 @@ using System.Net.Sockets;
 using UnityEngine.Networking;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
-using UnityEngine.SceneManagement;
 
 public class Client : MonoBehaviour
 {
@@ -25,7 +24,7 @@ public class Client : MonoBehaviour
     //For the server connection
     private bool isStarted;
     //For the game instance
-    private bool gameStarted;
+    private static bool gameStarted;
     private bool shuffleCards;
     private bool turn;
 
@@ -297,9 +296,9 @@ public class Client : MonoBehaviour
         }
     }
 
-    private void loadGameScene()
+    private static void loadGameScene()
     {
-        SceneManager.LoadScene("Game");
+        LobbyScene.gameStart();
         gameStarted = true;
     }
     #endregion

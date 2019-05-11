@@ -1415,7 +1415,7 @@ GameObject:
   - component: {fileID: 421576162}
   - component: {fileID: 421576161}
   m_Layer: 0
-  m_Name: Client
+  m_Name: GameScene
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1430,11 +1430,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 421576160}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6363db36fad02854cbb756c0477c1b65, type: 3}
+  m_Script: {fileID: 11500000, guid: 06e922a253d65c845bc6bbc43043fb2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerTextPrefab: {fileID: 2782661593458257882, guid: 9739ceba053c27b4eb91357f29947bdd,
-    type: 3}
 --- !u!4 &421576162
 Transform:
   m_ObjectHideFlags: 0
@@ -1764,7 +1762,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 421576161}
-        m_MethodName: sendReady
+        m_MethodName: onClickPlayerReady
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
